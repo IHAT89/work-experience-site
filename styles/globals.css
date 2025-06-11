@@ -1,3 +1,20 @@
+/* Consistent section spacing (top margin below header, bottom margin above footer) */
+html {
+  scroll-behavior: smooth;
+}
+
+main > section:first-of-type {
+  margin-top: 0;
+}
+
+main > section:last-of-type {
+  margin-bottom: 1rem;
+}
+
+main {
+  padding-top: 0; /* Space for sticky header */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -8,7 +25,8 @@ body {
 
 header, footer {
   background-color: #ffffffcc;
-  padding: 1.5rem 2rem;
+  min-height: 80px;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -105,13 +123,44 @@ h1, h2, h3 {
 }
 
 .section-alt {
-  padding: 3rem 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   background-color: #f9f9f9;
+  /*opacity: 0; */
+  /*transform: translateY(24px);*/
+  /*transition: opacity 0.6s cubic-bezier(.4,0,.2,1), transform 0.6s cubic-bezier(.4,0,.2,1);*/
 }
 
 .section-title {
   font-size: 2rem;
   margin-bottom: 1rem;
+}
+
+.section:hover,
+.section-alt:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: box-shadow 0.3s;
+}
+
+.about-narrow {
+  max-width: 600px;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.no-bullets {
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#name {
+  scroll-margin-top: 80px; /* Adjust to match your header height */
 }
 
 /* Contact Form */
@@ -177,10 +226,61 @@ label {
   text-decoration: none;
   z-index: 1001;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: 
+    transform 0.15s cubic-bezier(.4,2,.6,1),
+    background-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .floating-cta:hover {
   background-color: #007aff;
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.floating-cta:active {
+  transform: scale(0.98);
+}
+
+/* Responsive Navigation Styles */
+/* Responsive Hamburger Navigation */
+.hamburger {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #007aff;
+  cursor: pointer;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 4rem;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #e5e5ea;
+    padding: 1rem 2rem;
+    z-index: 999;
+  }
+
+  .nav.open {
+    display: flex;
+  }
+
+  .nav a {
+    margin: 0.5rem 0;
+  }
 }
