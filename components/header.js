@@ -1,3 +1,5 @@
+// /components/header.js
+
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -9,7 +11,11 @@ export default function Header() {
       <div className="logo">
         <Link href="/">$ Work Experience</Link>
       </div>
-      <nav className={`nav ${menuOpen ? 'open' : ''}`}>
+      <nav
+        id="main-nav"
+        className={`nav ${menuOpen ? 'open' : ''}`}
+        aria-label="Main navigation"
+      >
         <Link href="/">Home</Link>
         <Link href="/services">Services</Link>
         <Link href="/about">About</Link>
@@ -18,7 +24,9 @@ export default function Header() {
       <button
         className="hamburger"
         aria-label="Toggle navigation"
-        onClick={() => setMenuOpen(!menuOpen)}
+        aria-controls="main-nav"
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen(open => !open)}
       >
         <span />
         <span />

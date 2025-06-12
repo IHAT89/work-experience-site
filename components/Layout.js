@@ -16,10 +16,10 @@ export default function Layout({ children }) {
 
         {/* Navigation */}
         <nav className={menuOpen ? 'nav open' : 'nav'}>
-          <Link href="/" legacyBehavior><a>Home</a></Link>
-          <Link href="/services" legacyBehavior><a>Services</a></Link>
-          <Link href="/about" legacyBehavior><a>About</a></Link>
-          <Link href="/contact" legacyBehavior><a>Contact</a></Link>
+          <Link href="/">Home</Link>
+          <Link href="/services">Services</Link>
+          <Link href="/about">About</Link>
+          <Link href="/contact">Contact</Link>
         </nav>
       </header>
 

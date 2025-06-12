@@ -1,28 +1,43 @@
 // pages/contact.js
+
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [captcha, setCaptcha] = useState(null);
+  const recaptchaRef = useRef();
+  const [error, setError] = useState('');
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError('');
+    if (!captcha) {
+      setError("Please complete the reCAPTCHA.");
+      return;
+    }
     setLoading(true);
 
     const form = e.target;
+    const formData = new FormData(form);
+    formData.append("g-recaptcha-response", captcha);
+
     const res = await fetch('https://formspree.io/f/mdkzejaz', {
       method: 'POST',
       headers: { 'Accept': 'application/json' },
-      body: new FormData(form),
+      body: formData,
     });
 
     setLoading(false);
     if (res.ok) {
       setSubmitted(true);
       form.reset();
+      setCaptcha(null);
+      if (recaptchaRef.current) recaptchaRef.current.reset();
     } else {
-      alert('Sorry, there was a problem sending your message.');
+      setError('Sorry, there was a problem sending your message.');
     }
   }
 
@@ -78,6 +93,11 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ maxWidth: 600, width: '100%' }} aria-label="Contact form">
+                {error && (
+                  <div className="form-error" style={{ color: 'red', marginBottom: '1rem' }}>
+                    {error}
+                  </div>
+                )}
                 <div>
                   <label htmlFor="name">Name</label>
                   <input type="text" id="name" name="name" required className="form-input" aria-label="Your name" />
@@ -90,6 +110,13 @@ export default function Contact() {
                   <label htmlFor="message">Message</label>
                   <textarea id="message" name="message" required className="form-textarea" aria-label="Your message" />
                 </div>
+                <div style={{ margin: "1rem 0" }}>
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey="6LdwSl4rAAAAAIeg1LZ7jmoYbk6BAg_1AwzMr5kX"
+                    onChange={token => setCaptcha(token)}
+                  />
+                </div>
                 <div style={{ textAlign: 'right' }}>
                   <button type="submit" className="button" disabled={loading} aria-label="Send message">
                     {loading ? 'Sending...' : 'Send Message'}
@@ -101,7 +128,7 @@ export default function Contact() {
 
           <h3 style={{ textAlign: 'center', marginTop: '3rem' }}>Our Location</h3>
           <iframe
-            className="map-frame"
+            className="map-frame hide-on-mobile"
             title="Our Location"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.805047982354!2d103.84867227447214!3d1.2913184617622326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19a729046f1f%3A0xbe711601da8c21fb!2s1%20Coleman%20St%2C%20Singapore%20179803!5e0!3m2!1sen!2ssg!4v1749634480282!5m2!1sen!2ssg"
             width="100%"
@@ -111,6 +138,16 @@ export default function Contact() {
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
+          <style jsx>{`
+            .hide-on-mobile {
+              display: block;
+            }
+            @media (max-width: 768px) {
+              .hide-on-mobile {
+                display: none;
+              }
+            }
+          `}</style>
         </section>
       </main>
     </>
