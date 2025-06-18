@@ -10,13 +10,21 @@ export default function Home() {
         <meta name="description" content="Simple, reliable payroll and HR services for Singapore SMEs. Focus on your business—we handle the rest." />
         <meta property="og:title" content="$ Work Experience | Payroll & HR Services Singapore" />
         <meta property="og:description" content="Simple, reliable payroll and HR services for Singapore SMEs. Focus on your business—we handle the rest." />
+        <meta property="og:image" content="https://workexperience.sg/images/hero-illustration.png" />
+        <meta property="og:url" content="https://workexperience.sg/" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="$ Work Experience | Payroll & HR Services Singapore" />
+        <meta name="twitter:description" content="Simple, reliable payroll and HR services for Singapore SMEs. Focus on your business—we handle the rest." />
+        <meta name="twitter:image" content="https://workexperience.sg/images/hero-illustration.png" />
       </Head>
       
       <main>
-          <img
+          <Image
             src="/HoneyBeeKissingHeart.jpg"
             alt="Bee preview"
-            style={{ width: 192, height: 192 }}
+            width={192}
+            height={192}
           />
 
         <section className="hero">

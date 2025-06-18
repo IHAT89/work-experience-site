@@ -15,6 +15,13 @@ export default function Services() {
           property="og:description"
           content="Discover our payroll, compliance, and HR services for small and medium-sized businesses."
         />
+        <meta property="og:image" content="https://workexperience.sg/images/hero-illustration.png" />
+        <meta property="og:url" content="https://workexperience.sg/services" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Services | $ Work Experience" />
+        <meta name="twitter:description" content="Discover our payroll, compliance, and HR services for small and medium-sized businesses." />
+        <meta name="twitter:image" content="https://workexperience.sg/images/hero-illustration.png" />
       </Head>
 
       <main>

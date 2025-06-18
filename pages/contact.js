@@ -110,6 +110,7 @@ export default function Contact() {
         <meta name="description" content="Get in touch with $ Work Experience for payroll and HR support." />
         <meta property="og:title" content="Contact | $ Work Experience" />
         <meta property="og:description" content="Get in touch with $ Work Experience for payroll and HR support." />
+        <meta property="og:url" content="https://workexperience.sg/contact" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
