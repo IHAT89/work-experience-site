@@ -1,39 +1,27 @@
-import React from 'react';
+const FormInput = ({ label, id, error, ...props }) => {
+  const hasError = !!error;
 
-export default function FormInput({
-  label,
-  id,
-  name,
-  type = "text",
-  required = false,
-  value,
-  onChange,
-  error,
-  ...props
-}) {
   return (
-    <div>
-      <label htmlFor={id}>
-        {label} <span aria-hidden="true" style={{ color: 'red' }}>*</span>
-        <span className="sr-only">(required)</span>
+    <div style={{ marginBottom: '1rem' }}>
+      <label htmlFor={id} style={{ display: 'block', marginBottom: '0.5rem' }}>
+        {label}
+        {props.required && <span aria-hidden="true" style={{ color: 'red' }}>*</span>}
+        {props.required && <span className="sr-only">(required)</span>}
       </label>
       <input
-        type={type}
         id={id}
-        name={name}
-        required={required}
-        className="form-input"
-        aria-label={label}
-        aria-required={required}
-        aria-describedby={error ? `${id}-error` : undefined}
-        aria-invalid={!!error}
-        value={value}
-        onChange={onChange}
+        aria-invalid={hasError}
+        className={hasError ? 'form-input form-input-error' : 'form-input'}
         {...props}
       />
-      {error && (
-        <span id={`${id}-error`} style={{ color: 'red' }} role="alert">{error}</span>
+      {/* This is the crucial part that displays the error message */}
+      {hasError && (
+        <span role="alert" style={{ color: 'red', fontSize: '0.875rem', display: 'block', marginTop: '0.25rem' }}>
+          {error}
+        </span>
       )}
     </div>
   );
-}
+};
+
+export default FormInput;

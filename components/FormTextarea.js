@@ -29,9 +29,7 @@ export default function FormTextarea({
         onChange={onChange}
         {...props}
       />
-      {error && (
-        <span id={`${id}-error`} style={{ color: 'red' }} role="alert">{error}</span>
-      )}
+      {error && <span className="error">{error}</span>}
     </div>
   );
 }
