@@ -5,39 +5,26 @@ export default function About() {
   return (
     <>
       <Head>
-        <title>About | $ Work Experience</title>
-        <meta
-          name="description"
-          content="Learn more about $ Work Experience, our mission, and our team."
-        />
+        <title>About Us - Work Experience Site</title>
+        <meta name="description" content="Learn about our mission to deliver best-in-class payroll services." />
       </Head>
-      
+
       <main>
         <section className="section">
-          <div className="container about-narrow">
-            <h2 className="section-title">About Us</h2>
-            <p>
-              $ Work Experience is dedicated to providing simple, reliable payroll solution.
-              Our team combines years of experience with a passion for helping businesses grow by removing the stress of compliance and payroll.
-            </p>
-            <p>
-              We believe in accuracy, transparency, and responsiveness. Whether you’re a startup or an established company, we’re here to support your HR and payroll needs so you can focus on what matters most—your business.
-            </p>
-          </div>
+          <h1 className="section-title">Our Mission</h1>
+          <p className="section-subtitle">
+            We are dedicated to providing businesses with the high-quality payroll services they need to thrive.
+          </p>
         </section>
-        <section className="section-alt">
-          <div className="container">
-            <h3>Our Mission</h3>
-            <p>
-              To empower Singapore businesses with seamless, compliant, and worry-free payroll and HR services.
-            </p>
+
+        <section className="section-alt about-story">
+          <div className="about-story-icon-wrapper">
+            <div className="about-story-icon">🍯</div>
           </div>
-        </section>
-        <section className="section">
-          <div className="container">
-            <h3>Meet the Team</h3>
+          <div className="about-story-content">
+            <h2>Our Story</h2>
             <p>
-              Our team is made up of payroll specialists, HR advisors, and tech enthusiasts who care about your success.
+              Founded in 2025, our company was born from a simple observation: too many business owners were bogged down by the complexities of payroll administration. We set out to create a service that was not only reliable and efficient but also a true partner in our clients' success.
             </p>
           </div>
         </section>

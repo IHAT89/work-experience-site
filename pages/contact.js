@@ -1,49 +1,49 @@
 // pages/contact.js
 import { useState, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import ReCAPTCHA from 'react-google-recaptcha';
 
+// A new component for the success message
+function SuccessMessage({ onReset }) {
+  return (
+    <div className="success-message">
+      <h3>Message Sent!</h3>
+      <p>Thank you very much for visiting our site</p> {/* Changed this line */}
+      <button onClick={onReset}>Send Another Message</button>
+    </div>
+  );
+}
+
 export default function Contact() {
-  const [status, setStatus] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isRecaptchaBlocked, setIsRecaptchaBlocked] = useState(false);
   const recaptchaRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setStatus('Submitting...');
     setError('');
 
     const recaptchaValue = recaptchaRef.current.getValue();
     if (!recaptchaValue && !isRecaptchaBlocked) {
       setError('Please complete the reCAPTCHA.');
-      setStatus('');
       return;
     }
 
-    const form = e.target;
-    const formData = new FormData(form);
-
-    if (formData.get('website')) {
-      setError("Spam detected.");
-      setStatus('');
-      return;
-    }
-
-    const data = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      message: formData.get('message'),
-      recaptcha: recaptchaValue,
-    };
-
-    console.log('Form submitted:', data);
-    setStatus('Message sent successfully!');
-    form.reset();
-    if (recaptchaRef.current) {
-      recaptchaRef.current.reset();
-    }
+    console.log('Form submitted');
+    setIsSubmitted(true);
   };
+
+  if (isSubmitted) {
+    return (
+      <main>
+        <section className="section-alt">
+          <SuccessMessage onReset={() => setIsSubmitted(false)} />
+        </section>
+      </main>
+    );
+  }
 
   return (
     <>
@@ -52,7 +52,7 @@ export default function Contact() {
       </Head>
       <main>
         <section className="section">
-          <h2 className="section-title">Contact Us</h2>
+          <h1 className="section-title">Contact Us</h1>
           <p className="section-subtitle">Have a question? Fill out the form below.</p>
         </section>
         <section className="section-alt">
@@ -69,9 +69,7 @@ export default function Contact() {
               <label htmlFor="message">Message <span style={{ color: 'red' }} aria-hidden="true">*</span></label>
               <textarea id="message" name="message" rows="5" required />
             </div>
-            
             <input type="text" name="website" style={{ display: 'none' }} tabIndex="-1" autoComplete="off" />
-            
             <div>
               <ReCAPTCHA
                 ref={recaptchaRef}
@@ -80,13 +78,11 @@ export default function Contact() {
               />
               {isRecaptchaBlocked && (
                 <p style={{ color: '#8B0000', marginTop: '0.5rem' }}>
-                  The reCAPTCHA could not load. This may be due to an ad-blocker. Please disable it for this site to submit the form, or contact us directly at your-email@example.com.
+                  The reCAPTCHA could not load. This may be due to an ad-blocker.
                 </p>
               )}
             </div>
-
             <div>
-              {status && <p>{status}</p>}
               {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
             <div>

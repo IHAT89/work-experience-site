@@ -157,20 +157,22 @@ footer {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #0070f3;
+  background-color: #e63946; /* A vibrant, modern red */
   color: white;
   padding: 15px 25px;
   border-radius: 50px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 700;
   z-index: 1000;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; 
 }
 
 .floating-cta:hover {
+  background-color: #d62828; /* A slightly darker red for hover */
   transform: scale(1.05);
-}
+  color: white;
+  }
 
 /* --- Responsive Styles --- */
 @media (max-width: 768px) {
@@ -205,5 +207,142 @@ footer {
 
   .section-title {
     font-size: 2rem;
+  }
+}
+
+/* --- Services Page Styles --- */
+// ... (all your other styles) ...
+
+/* --- Services Page Styles --- */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.service-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+}
+
+.service-card-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.service-card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.service-card-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* --- About Page Styles --- */
+.about-story {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.about-story-content {
+  flex: 1;
+}
+
+.about-story-image {
+  flex: 1;
+}
+
+/* --- Responsive Styles for About Page --- */
+@media (max-width: 768px) {
+  .about-story {
+    flex-direction: column;
+  }
+}
+
+/* --- Featured Service Section (Services Page) --- */
+.featured-service {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.featured-service-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.featured-service-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.featured-service-description {
+  max-width: 700px;
+  margin: 0 auto 2.5rem auto;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* --- Cookie Banner Styles --- */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #212529;
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between; /* This spreads the items out */
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 1001;
+  flex-wrap: wrap;
+}
+
+.cookie-banner p {
+  margin: 0;
+  font-size: 0.9rem;
+  flex-grow: 1; /* Allows the text to take up available space */
+}
+
+.cookie-banner button {
+  background-color: #212529; /* Black background */
+  color: #fff; /* White text for better contrast */
+  border: 2px solid #212529;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: var(--body-font);
+  flex-shrink: 0;
+  transition: all 0.2s ease-in-out;
+  
+}
+
+.cookie-banner button:hover {
+  /* Invert to the site's primary blue on hover */
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+
+/* On smaller screens, center the content when it wraps */
+@media (max-width: 768px) {
+  .cookie-banner {
+    justify-content: center;
+    text-align: center;
   }
 }

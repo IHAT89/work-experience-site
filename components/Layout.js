@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-//import '../styles/globals.css';
+import CookieBanner from './CookieBanner'; // 1. Import the CookieBanner
 
 export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,7 +15,7 @@ export default function Layout({ children }) {
         <button className="hamburger" onClick={toggleMenu}>☰</button>
 
         {/* Navigation */}
-        <nav className={menuOpen ? 'nav open' : 'nav'}>
+        <nav className={menuOpen ? 'nav active' : 'nav'}> {/* Changed 'open' to 'active' to match CSS */}
           <Link href="/">Home</Link>
           <Link href="/services">Services</Link>
           <Link href="/about">About</Link>
@@ -30,6 +30,8 @@ export default function Layout({ children }) {
         Contact Us
       </Link>
      
+      <CookieBanner /> {/* 2. Add the CookieBanner component here */}
+
       <footer>
         <div>© {new Date().getFullYear()} $ Work Experience. All rights reserved.</div>
         <div>Developed by Ian Townrow</div>
