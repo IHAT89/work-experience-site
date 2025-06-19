@@ -32,6 +32,8 @@ export default function FormTextarea({
       {error && (
         <span id={`${id}-error`} style={{ color: 'red' }} role="alert">{error}</span>
       )}
+
+      {error && <span className="error">{error}</span>}
     </div>
   );
 }
