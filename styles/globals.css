@@ -1,17 +1,36 @@
+/* --- Define Design System (Colors & Fonts) --- */
+:root {
+  --primary-color: #0052cc;
+  --primary-hover: #0041a3;
+  --danger-color: #e63946;
+  --danger-hover: #d62828;
+  --text-color: #343a40;
+  --text-secondary: #6c757d;
+  --background-color: #f8f9fa;
+  --dark-color: #212529;
+  --heading-font: 'Poppins', sans-serif;
+  --body-font: 'Lato', sans-serif;
+}
+
 /* --- Reset and Base Styles --- */
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  line-height: 1.6;
+  font-family: var(--body-font);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 a {
-  color: inherit;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -26,7 +45,7 @@ header {
   align-items: center;
   padding: 1rem 2rem;
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -34,6 +53,7 @@ header {
 
 header strong {
   font-size: 1.5rem;
+  font-family: var(--heading-font);
 }
 
 .nav {
@@ -43,18 +63,18 @@ header strong {
 
 .nav a {
   font-size: 1.1rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: #555;
+  font-weight: 700;
+  font-family: var(--body-font);
+  color: var(--text-color);
   transition: color 0.2s ease-in-out;
 }
 
 .nav a:hover {
-  color: #0070f3;
+  color: var(--primary-color);
 }
 
 .hamburger {
-  display: none; /* Hidden on desktop */
+  display: none;
   font-size: 2rem;
   background: none;
   border: none;
@@ -77,7 +97,7 @@ main {
   background-color: #fff;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.12);
 }
 
 .section-title {
@@ -87,192 +107,69 @@ main {
 
 .section-subtitle {
   font-size: 1.2rem;
-  color: #666;
+  color: var(--text-secondary);
   max-width: 800px;
   margin: 0 auto 2rem auto;
 }
 
-/* --- Contact Form Styles --- */
-.contact-form {
-  max-width: 600px;
-  margin: 2rem auto;
-}
-
-.contact-form > div {
-  margin-bottom: 1.5rem;
-}
-
-.contact-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.contact-form input[type="text"],
-.contact-form input[type="email"],
-.contact-form textarea {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease-in-out;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-  outline: none;
-  border-color: #0070f3;
-}
-
-.contact-form button[type="submit"] {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #2d3748;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.contact-form button[type="submit"]:hover {
-  background-color: #4a5568;
-}
-
-/* --- Footer --- */
-footer {
-  text-align: center;
-  padding: 2rem;
-  background-color: #333;
-  color: #fff;
-  margin-top: 2rem;
-}
-
-/* --- Floating CTA --- */
-.floating-cta {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e63946; /* A vibrant, modern red */
-  color: white;
-  padding: 15px 25px;
-  border-radius: 50px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  font-size: 1.1rem;
-  font-weight: 700;
-  z-index: 1000;
-  transition: all 0.2s ease-in-out; 
-}
-
-.floating-cta:hover {
-  background-color: #d62828; /* A slightly darker red for hover */
-  transform: scale(1.05);
-  color: white;
-  }
-
-/* --- Responsive Styles --- */
-@media (max-width: 768px) {
-  main {
-    padding: 1rem;
-  }
-
-  .nav {
-    display: none; /* Hide nav by default on mobile */
-    flex-direction: column;
-    width: 100%;
-    position: absolute;
-    top: 70px; /* Position below header */
-    left: 0;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 1rem 0;
-    text-align: center;
-  }
-
-  .nav.active {
-    display: flex; /* Show nav when active */
-  }
-
-  .hamburger {
-    display: block; /* Show hamburger on mobile */
-  }
-
-  header {
-    flex-wrap: wrap;
-  }
-
-  .section-title {
-    font-size: 2rem;
-  }
-}
-
-/* --- Services Page Styles --- */
-// ... (all your other styles) ...
-
-/* --- Services Page Styles --- */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.service-card {
+/* --- Hero Section Styles --- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  padding: 4rem 2rem;
   background-color: #fff;
   border-radius: 8px;
-  padding: 2.5rem 2rem;
+}
+
+.hero-content {
+  flex: 1;
+  text-align: left;
+}
+
+.hero-image {
+  flex: 1;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.08);
+.hero-image img {
+  max-width: 100%;
+  height: auto;
 }
 
-.service-card-icon {
-  font-size: 3rem;
+.hero-title {
+  font-size: 3.5rem;
   margin-bottom: 1rem;
 }
 
-.service-card-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.service-card-description {
+.hero-subtitle {
+  font-size: 1.25rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 2.5rem;
 }
 
-/* --- About Page Styles --- */
-.about-story {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
+.hero-cta-button {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 1.1rem 2.8rem;
+  font-family: var(--heading-font);
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  box-shadow: 0 4px 14px rgba(0, 82, 204, 0.3);
+  transition: all 0.3s ease;
 }
 
-.about-story-content {
-  flex: 1;
+.hero-cta-button:hover {
+  background-color: var(--primary-hover);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 82, 204, 0.4);
 }
 
-.about-story-image {
-  flex: 1;
-}
-
-/* --- Responsive Styles for About Page --- */
-@media (max-width: 768px) {
-  .about-story {
-    flex-direction: column;
-  }
-}
-
-/* --- Featured Service Section (Services Page) --- */
+/* --- Services Page Styles --- */
 .featured-service {
   text-align: center;
   padding: 4rem 2rem;
@@ -295,33 +192,167 @@ footer {
   line-height: 1.8;
 }
 
+/* --- About Page Styles --- */
+.about-story {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.about-story-content {
+  flex: 1;
+}
+
+.about-story-icon-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-story-icon {
+  font-size: 10rem;
+  line-height: 1;
+  opacity: 0.15;
+}
+
+/* --- Contact Form & Success Message Styles --- */
+.contact-form {
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.contact-form > div {
+  margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-family: var(--body-font);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.contact-form button[type="submit"],
+.success-message button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: var(--heading-font);
+  color: #fff;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.contact-form button[type="submit"]:hover,
+.success-message button:hover {
+  background-color: var(--primary-hover);
+}
+
+.success-message {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.success-message h3 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.success-message p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.success-message button {
+  width: auto; /* Override width for this specific button */
+  padding: 1rem 2rem;
+}
+
+/* --- Footer --- */
+footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--dark-color);
+  color: #fff;
+  margin-top: 2rem;
+}
+
+/* --- Floating CTA --- */
+.floating-cta {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--danger-color);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  font-size: 1.1rem;
+  font-weight: 700;
+  z-index: 1000;
+  transition: all 0.2s ease-in-out;
+}
+
+.floating-cta:hover {
+  background-color: var(--danger-hover);
+  transform: scale(1.05);
+  color: white;
+}
+
 /* --- Cookie Banner Styles --- */
 .cookie-banner {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #212529;
-  color: #fff;
-  padding: 1rem 2rem;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  max-width: 95%;
+  width: 550px;
+  background-color: #fff;
+  color: var(--text-color);
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  padding: 1.5rem;
   display: flex;
-  justify-content: space-between; /* This spreads the items out */
+  justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  z-index: 1001;
-  flex-wrap: wrap;
 }
 
 .cookie-banner p {
   margin: 0;
   font-size: 0.9rem;
-  flex-grow: 1; /* Allows the text to take up available space */
+  flex-grow: 1;
 }
 
 .cookie-banner button {
-  background-color: #212529; /* Black background */
-  color: #fff; /* White text for better contrast */
-  border: 2px solid #212529;
+  background-color: var(--dark-color);
+  color: #fff;
+  border: 2px solid var(--dark-color);
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
   cursor: pointer;
@@ -329,20 +360,75 @@ footer {
   font-family: var(--body-font);
   flex-shrink: 0;
   transition: all 0.2s ease-in-out;
-  
 }
 
 .cookie-banner button:hover {
-  /* Invert to the site's primary blue on hover */
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   color: #fff;
 }
 
-/* On smaller screens, center the content when it wraps */
+/* --- Responsive Styles --- */
+@media (max-width: 992px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 @media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  .nav.active {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  header {
+    flex-wrap: wrap;
+  }
+
+  .section-title,
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .about-story {
+    flex-direction: column-reverse;
+  }
+}
+
+@media (max-width: 576px) {
   .cookie-banner {
-    justify-content: center;
+    flex-direction: column;
     text-align: center;
   }
 }
