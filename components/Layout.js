@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import '../styles/globals.css';
+//import '../styles/globals.css';
 
 export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
