@@ -24,7 +24,7 @@ export default function About() {
           <div className="about-story-content">
             <h2>Our Story</h2>
             <p>
-              Founded in 2025, our company was born from a simple observation: too many business owners were bogged down by the complexities of payroll administration. We set out to create a service that was not only reliable and efficient but also a true partner in our clients' success.
+              Founded in 2008, our company was born from a simple observation: too many business owners were bogged down by the complexities of payroll administration. We set out to create a service that was not only reliable and efficient but also a true partner in our clients&apos; success.
             </p>
           </div>
         </section>

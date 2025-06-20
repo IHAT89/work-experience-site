@@ -10,9 +10,15 @@ export default function Layout({ children }) {
     <>
       <header>
         <div><strong>$ Work Experience</strong></div>
-
+                
         {/* Hamburger Icon */}
-        <button className="hamburger" onClick={toggleMenu}>☰</button>
+        <button 
+          className="hamburger" 
+          onClick={toggleMenu} 
+          aria-label="Toggle navigation menu"
+        >
+          ☰
+        </button>
 
         {/* Navigation */}
         <nav className={menuOpen ? 'nav active' : 'nav'}> {/* Changed 'open' to 'active' to match CSS */}

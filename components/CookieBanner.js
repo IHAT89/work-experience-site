@@ -5,7 +5,6 @@ export default function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if the user has already given consent
     const consent = localStorage.getItem('cookie_consent_given');
     if (!consent) {
       setIsVisible(true);
@@ -13,7 +12,6 @@ export default function CookieBanner() {
   }, []);
 
   const handleAccept = () => {
-    // Store the consent and hide the banner
     localStorage.setItem('cookie_consent_given', 'true');
     setIsVisible(false);
   };
@@ -25,9 +23,10 @@ export default function CookieBanner() {
   return (
     <div className="cookie-banner">
       <p>
-        We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. 
-        {/* You can create a Privacy Policy page later and link it here */}
-        {/* <Link href="/privacy-policy">Learn more</Link> */}
+        We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.{' '}
+        <Link href="/privacy-policy" style={{ textDecoration: 'underline', fontWeight: 'bold' }}>
+          Learn more
+        </Link>
       </p>
       <button onClick={handleAccept}>Accept</button>
     </div>

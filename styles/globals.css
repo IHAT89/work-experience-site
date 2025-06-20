@@ -432,3 +432,10 @@ footer {
     text-align: center;
   }
 }
+/* --- Accessibility Enhancements --- */
+/* Add a distinct outline to focused elements for keyboard navigators */
+:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
