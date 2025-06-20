@@ -1,3 +1,4 @@
+// /pages/api/contact.js
 import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
@@ -24,18 +25,18 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: 'Failed to verify reCAPTCHA.' });
   }
 
-  // 3. Configure Nodemailer transporter
+  // 3. Configure Nodemailer transporter for GMAIL
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      pass: process.env.SMTP_PASSWORD, // This must be the App Password from .env.local
     },
   });
 
   // 4. Define email options
   const mailOptions = {
-    from: `"${name}" <${process.env.SMTP_USER}>`,
+    from: `"${name}" <${process.env.SENDER_EMAIL}>`,
     replyTo: email,
     to: process.env.RECIPIENT_EMAIL,
     subject: `New Contact Form Submission from ${name}`,
