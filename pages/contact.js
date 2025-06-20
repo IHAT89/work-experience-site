@@ -1,15 +1,13 @@
 // pages/contact.js
 import { useState, useRef } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-// A new component for the success message
 function SuccessMessage({ onReset }) {
   return (
     <div className="success-message">
       <h3>Message Sent!</h3>
-      <p>Thank you very much for visiting our site</p> {/* Changed this line */}
+      <p>Thank you very much for visiting our site. We will get back to you shortly.</p>
       <button onClick={onReset}>Send Another Message</button>
     </div>
   );
@@ -18,21 +16,49 @@ function SuccessMessage({ onReset }) {
 export default function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRecaptchaBlocked, setIsRecaptchaBlocked] = useState(false);
   const recaptchaRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
     const recaptchaValue = recaptchaRef.current.getValue();
     if (!recaptchaValue && !isRecaptchaBlocked) {
       setError('Please complete the reCAPTCHA.');
+      setIsSubmitting(false);
       return;
     }
 
-    console.log('Form submitted');
-    setIsSubmitted(true);
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+      recaptcha: recaptchaValue,
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'An unknown error occurred. Please try again.');
+      }
+    } catch (err) {
+      setError('A network error occurred. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+      recaptchaRef.current.reset(); // Reset reCAPTCHA after submission
+    }
   };
 
   if (isSubmitted) {
@@ -59,15 +85,15 @@ export default function Contact() {
           <form onSubmit={handleSubmit} className="contact-form" aria-label="Contact form" autoComplete="off">
             <div>
               <label htmlFor="name">Name <span style={{ color: 'red' }} aria-hidden="true">*</span></label>
-              <input type="text" id="name" name="name" required />
+              <input type="text" id="name" name="name" required disabled={isSubmitting} />
             </div>
             <div>
               <label htmlFor="email">Email <span style={{ color: 'red' }} aria-hidden="true">*</span></label>
-              <input type="email" id="email" name="email" required />
+              <input type="email" id="email" name="email" required disabled={isSubmitting} />
             </div>
             <div>
               <label htmlFor="message">Message <span style={{ color: 'red' }} aria-hidden="true">*</span></label>
-              <textarea id="message" name="message" rows="5" required />
+              <textarea id="message" name="message" rows="5" required disabled={isSubmitting} />
             </div>
             <input type="text" name="website" style={{ display: 'none' }} tabIndex="-1" autoComplete="off" />
             <div>
@@ -82,11 +108,11 @@ export default function Contact() {
                 </p>
               )}
             </div>
+            {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
             <div>
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-            </div>
-            <div>
-              <button type="submit">Send Message</button>
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
             </div>
           </form>
         </section>
