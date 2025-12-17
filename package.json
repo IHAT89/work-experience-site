@@ -33,6 +33,6 @@
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.0.0",
     "postcss": "^8.5.4",
-    "tailwindcss": "^4.1.8"
+    "tailwindcss": "^4.1.18"
   }
 }
