@@ -11,7 +11,7 @@
   "dependencies": {
     "bootstrap": "^5.3.6",
     "dotenv": "^16.5.0",
-    "framer-motion": "^12.17.3",
+    "framer-motion": "^12.23.26",
     "next": "^16.0.10",
     "nodemailer": "^7.0.3",
     "react": "^19.2.3",
