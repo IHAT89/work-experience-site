@@ -158,30 +158,6 @@ h1, h2, h3 {
     height: 300px;
   }
 }
-  margin: 1.2rem 0;
-}
-
-.hero-cta {
-  display: inline-block;
-  background: #007aff;
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: 700;
-  padding: 1.2rem 3rem;
-  border-radius: 2.5rem;
-  text-decoration: none;
-  margin-top: 2.5rem;
-  box-shadow: 0 6px 32px rgba(0,122,255,0.18), 0 1.5px 6px rgba(0,0,0,0.08);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.12s;
-  letter-spacing: 0.02em;
-}
-
-.hero-cta:hover, .hero-cta:focus {
-  background: #005bb5;
-  box-shadow: 0 8px 40px rgba(0,122,255,0.28), 0 2px 8px rgba(0,0,0,0.12);
-  transform: translateY(-2px) scale(1.04);
-  text-decoration: none;
-}
 
 .section {
   padding: 3rem 2rem;
