@@ -8,6 +8,6 @@
 
 ## UI/UX Improvements
 
-- [ ] **Redesign Cookie Consent Banner**: Fix the issue where the Google/Cookie consent banner takes up too much screen space.
+- [x] **Redesign Cookie Consent Banner**: Fix the issue where the Google/Cookie consent banner takes up too much screen space.
   - _Current State_: User reports it takes up a "huge chunk" of the page.
   - _Action_: Customize the styling or switch libraries to make it less intrusive while maintaining compliance.
