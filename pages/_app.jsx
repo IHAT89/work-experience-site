@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href={canonicalUrl} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/HoneyBeeKissingHeart48x48.png" />
       </Head>
       
       {/* Google Analytics */}
