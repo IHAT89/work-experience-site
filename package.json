@@ -10,7 +10,7 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "jest"
   },
   "dependencies": {
@@ -19,7 +19,7 @@
     "bootstrap": "^5.3.6",
     "dotenv": "^16.5.0",
     "framer-motion": "^12.17.3",
-    "next": "^14.2.18",
+    "next": "^16.1.0",
     "nodemailer": "^7.0.3",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
