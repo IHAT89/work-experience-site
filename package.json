@@ -14,6 +14,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@marsidev/react-turnstile": "^1.4.0",
     "bootstrap": "^5.3.6",
     "dotenv": "^16.5.0",
     "framer-motion": "^12.17.3",
@@ -40,5 +42,8 @@
     "jest-environment-jsdom": "^30.0.0",
     "postcss": "^8.5.4",
     "tailwindcss": "^4.1.8"
+  },
+  "overrides": {
+    "glob": "10.5.0"
   }
 }

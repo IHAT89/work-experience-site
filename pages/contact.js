@@ -2,15 +2,19 @@
 
 import { useState, useRef } from 'react';
 import Head from 'next/head';
-import ReCAPTCHA from 'react-google-recaptcha';
+import { Turnstile } from '@marsidev/react-turnstile';
+import emailjs from '@emailjs/browser';
 import FormInput from '../components/FormInput';
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const formRef = useRef();
+  
+  const [form, setForm] = useState({ name: '', email: '', message: '', website: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [captcha, setCaptcha] = useState(null);
-  const recaptchaRef = useRef();
+  const [isSending, setIsSending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const validate = () => {
     const errors = {};
@@ -25,8 +29,9 @@ export default function Contact() {
     } else if (form.message.length < 10) {
       errors.message = 'Message must be at least 10 characters.';
     }
+    
     if (!captcha) {
-      errors.captcha = 'Please complete the reCAPTCHA.';
+      errors.captcha = 'Please complete the CAPTCHA.';
     }
     return errors;
   };
@@ -37,12 +42,36 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Honeypot check: If the hidden 'website' field is filled, it's a bot.
+    if (form.website) {
+      console.log('Bot detected. Silently ignoring.');
+      setSubmitted(true); // Fake success
+      return;
+    }
+
     const errors = validate();
     setFieldErrors(errors);
+    setErrorMessage('');
 
     if (Object.keys(errors).length === 0) {
-      console.log('Form is valid, submitting...');
-      setSubmitted(true);
+      setIsSending(true);
+      
+      emailjs.sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      )
+      .then((result) => {
+          console.log(result.text);
+          setSubmitted(true);
+          setIsSending(false);
+      }, (error) => {
+          console.log(error.text);
+          setErrorMessage('Failed to send message. Please try again later.');
+          setIsSending(false);
+      });
     } else {
       console.log('Form has errors:', errors);
     }
@@ -65,11 +94,29 @@ export default function Contact() {
       <main>
         <section className="section-alt">
           <div className="form-container">
-            <form onSubmit={handleSubmit} noValidate>
-              {/* This is the crucial part that adds the summary error */}
+            <form ref={formRef} onSubmit={handleSubmit} noValidate>
+              {/* Honeypot Field - Invisible to humans, tempting for bots */}
+              <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  tabIndex="-1"
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={handleChange}
+                />
+              </div>
+
               {Object.keys(fieldErrors).length > 0 && (
                 <div role="alert" style={{ color: 'red', marginBottom: '1rem' }}>
                   Please fix the errors below.
+                </div>
+              )}
+              {errorMessage && (
+                <div role="alert" style={{ color: 'red', marginBottom: '1rem' }}>
+                  {errorMessage}
                 </div>
               )}
 
@@ -108,15 +155,17 @@ export default function Contact() {
               </div>
               
               <div style={{ margin: '1rem 0' }}>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || 'test-key'}
-                  onChange={token => setCaptcha(token)}
+                <Turnstile 
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} 
+                  onSuccess={(token) => setCaptcha(token)}
                 />
+
                 {fieldErrors.captcha && <span role="alert" style={{ color: 'red' }}>{fieldErrors.captcha}</span>}
               </div>
 
-              <button type="submit" className="button">Send Message</button>
+              <button type="submit" className="button" disabled={isSending}>
+                {isSending ? 'Sending...' : 'Send Message'}
+              </button>
             </form>
           </div>
         </section>

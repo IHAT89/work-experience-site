@@ -85,8 +85,8 @@ describe('Contact Form', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /send message/i }));
     
-    // The only error remaining should be for the reCAPTCHA
-    const captchaError = await screen.findByText(/please complete the recaptcha/i);
+    // The only error remaining should be for the CAPTCHA
+    const captchaError = await screen.findByText(/please complete the captcha/i);
     expect(captchaError).toBeInTheDocument();
 
     // No other validation errors should be present

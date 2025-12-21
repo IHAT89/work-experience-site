@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Consistent section spacing (top margin below header, bottom margin above footer) */
 html {
   scroll-behavior: smooth;
