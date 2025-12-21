@@ -33,19 +33,21 @@ cd work-experience-site/work-experience-site
 Next.js needs your API keys during the **build process**. You must create the `.env.local` file before running Docker.
 
 1. Create the file:
+
    ```bash
    nano .env.local
    ```
 
 2. Paste your configuration (use your actual keys):
+
    ```env
    NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key_here
    RECAPTCHA_SECRET_KEY=your_secret_key_here
-   
+
    NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
    NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-   
+
    NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_key
    TURNSTILE_SECRET_KEY=your_turnstile_secret
    ```
@@ -74,6 +76,7 @@ Open your browser and visit: `http://<your-server-ip>:3001`
 ## Maintenance
 
 ### How to Update the App
+
 If you make changes to the code and push them to GitHub, follow these steps to update your server:
 
 ```bash
@@ -85,6 +88,7 @@ sudo docker compose up -d --build
 ```
 
 ### How to Check Logs
+
 If something isn't working (like the contact form), check the logs:
 
 ```bash
