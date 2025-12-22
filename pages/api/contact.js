@@ -3,7 +3,6 @@ import nodemailer from 'nodemailer';
 
 // --- START ENV VARIABLE VALIDATION ---
 const requiredEnvVars = [
-  'RECAPTCHA_SECRET_KEY',
   'SMTP_USER',
   'SMTP_PASSWORD',
   'SENDER_EMAIL',
@@ -21,7 +20,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { name, email, message, recaptcha, website } = req.body;
+  const { name, email, message, website } = req.body;
 
   // 2. Honeypot check (from your original form)
   if (website) {
@@ -32,28 +31,12 @@ export default async function handler(req, res) {
   }
 
   // 3. Server-side input validation
-  if (!name || !email || !message || !recaptcha) {
+  if (!name || !email || !message) {
     return res.status(400).json({ message: 'All form fields are required.' });
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: 'Invalid email format.' });
-  }
-
-  // 4. Validate reCAPTCHA
-  try {
-    const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptcha}`,
-    });
-    const recaptchaData = await recaptchaResponse.json();
-    if (!recaptchaData.success) {
-      return res.status(400).json({ message: 'reCAPTCHA verification failed.' });
-    }
-  } catch (error) {
-    console.error('reCAPTCHA verification error:', error);
-    return res.status(500).json({ message: 'Failed to verify reCAPTCHA.' });
   }
 
   // 5. Configure Nodemailer transporter for GMAIL

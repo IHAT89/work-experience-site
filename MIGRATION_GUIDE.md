@@ -21,12 +21,22 @@ sudo sh get-docker.sh
 
 ## Step 1: Get the Code
 
-Clone your repository to the server.
+1.  Navigate to the directory where you want to store your projects. For example:
 
-```bash
-git clone https://github.com/IHAT89/work-experience-site.git
-cd work-experience-site/work-experience-site
-```
+    ```bash
+    cd ~/projects
+    ```
+
+2.  Clone the repository. This will create a new directory called `work-experience-site`.
+
+    ```bash
+    git clone https://github.com/IHAT89/work-experience-site.git
+    ```
+
+3.  Navigate into the project directory.
+    ```bash
+    cd work-experience-site
+    ```
 
 ## Step 2: Configure Environment Variables (CRITICAL)
 
@@ -41,9 +51,6 @@ Next.js needs your API keys during the **build process**. You must create the `.
 2. Paste your configuration (use your actual keys):
 
    ```env
-   NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key_here
-   RECAPTCHA_SECRET_KEY=your_secret_key_here
-
    NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
    NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
