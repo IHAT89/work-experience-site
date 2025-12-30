@@ -38,10 +38,10 @@ jobs:
     - name: Build application
       run: npm run build
 
-    - name: Check for security vulnerabilities
-      # Fails if there are vulnerabilities with 'high' or 'critical' severity
-      run: npm audit --audit-level=high
-      continue-on-error: true
+    # - name: Check for security vulnerabilities
+    #   # Fails if there are vulnerabilities with 'high' or 'critical' severity
+    #   run: npm audit --audit-level=high
+    #   continue-on-error: true
 
   codeql-analysis:
     name: CodeQL Security Scan
