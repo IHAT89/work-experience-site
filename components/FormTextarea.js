@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function FormTextarea({
   label,
@@ -33,3 +33,13 @@ export default function FormTextarea({
     </div>
   );
 }
+
+FormTextarea.propTypes = {
+  label: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  required: PropTypes.bool,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  error: PropTypes.string,
+};

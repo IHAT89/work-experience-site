@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const FormInput = ({ label, id, error, ...props }) => {
   const hasError = !!error;
 
@@ -22,6 +24,13 @@ const FormInput = ({ label, id, error, ...props }) => {
       )}
     </div>
   );
+};
+
+FormInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  required: PropTypes.bool,
 };
 
 export default FormInput;

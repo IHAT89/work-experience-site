@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import Link from 'next/link';
-//import '../styles/globals.css';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 export default function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,3 +37,7 @@ export default function Layout({ children }) {
     </>
   );
 }
+
+Layout.propTypes = {
+  children: PropTypes.node,
+};
