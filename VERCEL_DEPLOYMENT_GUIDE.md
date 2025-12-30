@@ -106,7 +106,8 @@ Vercel will automatically detect that it's a Next.js project. You just need to a
   - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`
   - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`
   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-  - `TURNSTILE_SECRET_KEY`
+
+> **Note:** The `TURNSTILE_SECRET_KEY` and SMTP variables are not currently used by the frontend contact form, so you can skip them if you are only using the EmailJS integration.
 
 ### 4. Deploy
 
