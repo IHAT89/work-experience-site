@@ -3,5 +3,5 @@
   "rules": {
     "react/no-unescaped-entities": "off"
   },
-  "ignorePatterns": ["pages/api/**"]
+  "ignorePatterns": ["pages/api/**", "tests/**"]
 }

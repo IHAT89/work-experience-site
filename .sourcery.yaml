@@ -1,4 +1,5 @@
 ignore:
   - "**/*.d.ts"
-  - "node_modules/**"
-  - ".vscode-server/**"
+  - "**/node_modules/**"
+  - "**/.vscode-server/**"
+  - "**/lib.es5.d.ts"
