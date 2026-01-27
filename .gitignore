@@ -41,3 +41,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .recaptcha-keys-backup.txt
+.env-backup.txt

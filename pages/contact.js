@@ -106,8 +106,8 @@ export default function Contact() {
   if (submitted) {
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
-        <h3>Thank you!</h3>
-        <p>Your message has been sent.</p>
+        <h3 style={{ fontWeight: "bold" }}>Thank you!</h3>
+        <p style={{ fontWeight: "bold" }}>Your message has been sent.</p>
       </div>
     );
   }
