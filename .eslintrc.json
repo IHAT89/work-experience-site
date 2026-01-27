@@ -1,8 +1,7 @@
 {
   "extends": ["next/core-web-vitals"],
-  "parserOptions": {
-    "babelOptions": {
-      "presets": ["next/babel"]
-    }
-  }
+  "rules": {
+    "react/no-unescaped-entities": "off"
+  },
+  "ignorePatterns": ["pages/api/**"]
 }
