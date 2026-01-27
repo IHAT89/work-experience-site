@@ -1,37 +1,38 @@
 // pages/contact.js
 
-import { useState, useRef } from 'react';
-import Head from 'next/head';
-import { Turnstile } from '@marsidev/react-turnstile';
-import emailjs from '@emailjs/browser';
-import FormInput from '../components/FormInput';
+import emailjs from "@emailjs/browser";
+import Head from "next/head";
+import { useRef, useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import FormInput from "../components/FormInput";
 
 export default function Contact() {
   const formRef = useRef();
-  
-  const [form, setForm] = useState({ name: '', email: '', message: '', website: '' });
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+    website: "",
+  });
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [captcha, setCaptcha] = useState(null);
   const [isSending, setIsSending] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const validate = () => {
     const errors = {};
-    if (!form.name) errors.name = 'Name is required.';
+    if (!form.name) errors.name = "Name is required.";
     if (!form.email) {
-      errors.email = 'Email is required.';
+      errors.email = "Email is required.";
     } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      errors.email = 'Please enter a valid email address.';
+      errors.email = "Please enter a valid email address.";
     }
     if (!form.message) {
-      errors.message = 'Message is required.';
+      errors.message = "Message is required.";
     } else if (form.message.length < 10) {
-      errors.message = 'Message must be at least 10 characters.';
-    }
-    
-    if (!captcha) {
-      errors.captcha = 'Please complete the CAPTCHA.';
+      errors.message = "Message must be at least 10 characters.";
     }
     return errors;
   };
@@ -40,46 +41,71 @@ export default function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Honeypot check: If the hidden 'website' field is filled, it's a bot.
     if (form.website) {
-      console.log('Bot detected. Silently ignoring.');
+      console.log("Bot detected. Silently ignoring.");
       setSubmitted(true); // Fake success
       return;
     }
 
     const errors = validate();
     setFieldErrors(errors);
-    setErrorMessage('');
+    setErrorMessage("");
 
     if (Object.keys(errors).length === 0) {
       setIsSending(true);
-      
-      emailjs.sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-        formRef.current,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-      )
-      .then((result) => {
-          console.log(result.text);
-          setSubmitted(true);
-          setIsSending(false);
-      }, (error) => {
-          console.log(error.text);
-          setErrorMessage('Failed to send message. Please try again later.');
-          setIsSending(false);
-      });
+
+      try {
+        // Execute reCAPTCHA
+        if (!executeRecaptcha) {
+          console.error("executeRecaptcha is not available");
+          throw new Error("reCAPTCHA not ready");
+        }
+
+        console.log("Executing reCAPTCHA...");
+        const token = await executeRecaptcha("contact_form");
+        console.log("reCAPTCHA token received:", token ? "Success" : "Failed");
+
+        // Verify reCAPTCHA token
+        const verifyResponse = await fetch("/api/verify-recaptcha", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
+
+        const verifyData = await verifyResponse.json();
+
+        if (!verifyData.success || verifyData.score < 0.5) {
+          throw new Error("Security verification failed");
+        }
+
+        // Send email via EmailJS
+        const result = await emailjs.sendForm(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+          formRef.current,
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+        );
+
+        console.log(result.text);
+        setSubmitted(true);
+      } catch (error) {
+        console.error("Form submission error:", error);
+        setErrorMessage("Failed to send message. Please try again later.");
+      } finally {
+        setIsSending(false);
+      }
     } else {
-      console.log('Form has errors:', errors);
+      console.log("Form has errors:", errors);
     }
   };
 
   if (submitted) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <div style={{ textAlign: "center", padding: "2rem" }}>
         <h3>Thank you!</h3>
         <p>Your message has been sent.</p>
       </div>
@@ -96,7 +122,10 @@ export default function Contact() {
           <div className="form-container">
             <form ref={formRef} onSubmit={handleSubmit} noValidate>
               {/* Honeypot Field - Invisible to humans, tempting for bots */}
-              <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden="true">
+              <div
+                style={{ position: "absolute", left: "-9999px" }}
+                aria-hidden="true"
+              >
                 <label htmlFor="website">Website</label>
                 <input
                   type="text"
@@ -110,12 +139,18 @@ export default function Contact() {
               </div>
 
               {Object.keys(fieldErrors).length > 0 && (
-                <div role="alert" style={{ color: 'red', marginBottom: '1rem' }}>
+                <div
+                  role="alert"
+                  style={{ color: "red", marginBottom: "1rem" }}
+                >
                   Please fix the errors below.
                 </div>
               )}
               {errorMessage && (
-                <div role="alert" style={{ color: 'red', marginBottom: '1rem' }}>
+                <div
+                  role="alert"
+                  style={{ color: "red", marginBottom: "1rem" }}
+                >
                   {errorMessage}
                 </div>
               )}
@@ -151,20 +186,37 @@ export default function Contact() {
                   aria-invalid={!!fieldErrors.message}
                   className="form-textarea"
                 />
-                {fieldErrors.message && <span role="alert" style={{ color: 'red' }}>{fieldErrors.message}</span>}
+                {fieldErrors.message && (
+                  <span role="alert" style={{ color: "red" }}>
+                    {fieldErrors.message}
+                  </span>
+                )}
               </div>
-              
-              <div style={{ margin: '1rem 0' }}>
-                <Turnstile 
-                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} 
-                  onSuccess={(token) => setCaptcha(token)}
-                />
 
-                {fieldErrors.captcha && <span role="alert" style={{ color: 'red' }}>{fieldErrors.captcha}</span>}
+              <div
+                style={{ margin: "1rem 0", fontSize: "0.85rem", color: "#666" }}
+              >
+                This site is protected by reCAPTCHA and the Google{" "}
+                <a
+                  href="https://policies.google.com/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </a>{" "}
+                and{" "}
+                <a
+                  href="https://policies.google.com/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Service
+                </a>{" "}
+                apply.
               </div>
 
               <button type="submit" className="button" disabled={isSending}>
-                {isSending ? 'Sending...' : 'Send Message'}
+                {isSending ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

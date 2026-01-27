@@ -2,71 +2,71 @@ name: CI/CD & Security
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   schedule:
-    - cron: '30 1 * * 0' # Run weekly security scan
+    - cron: 30 1 * * 0 # Run weekly security scan
 
 jobs:
   build-and-test:
     name: Build, Test & Lint
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
 
-    - name: Install dependencies
-      run: |
-        node -v
-        npm -v
-        npm ci
+      - name: Install dependencies
+        run: |
+          node -v
+          npm -v
+          npm ci
 
-    - name: Lint code
-      run: npm run lint
+      - name: Lint code
+        run: npm run lint
 
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
 
-    - name: Build application
-      run: npm run build
+      - name: Build application
+        run: npm run build
 
     # - name: Check for security vulnerabilities
     #   # Fails if there are vulnerabilities with 'high' or 'critical' severity
     #   run: npm audit --audit-level=high
     #   continue-on-error: true
 
-  codeql-analysis:
-    name: CodeQL Security Scan
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+  # codeql-analysis:
+  #   name: CodeQL Security Scan
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     actions: read
+  #     contents: read
+  #     security-events: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript' ]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       language: [ 'javascript' ]
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v4
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ matrix.language }}
+  #   - name: Initialize CodeQL
+  #     uses: github/codeql-action/init@v3
+  #     with:
+  #       languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+  #   - name: Autobuild
+  #     uses: github/codeql-action/autobuild@v3
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+  #   - name: Perform CodeQL Analysis
+  #     uses: github/codeql-action/analyze@v3

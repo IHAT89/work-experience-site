@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   work-experience-site:
@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"
+      - 3001:3000
     environment:
       - NODE_ENV=production
     restart: always
