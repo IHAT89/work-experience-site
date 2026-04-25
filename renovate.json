@@ -20,13 +20,11 @@
     "prPriority": 10
   },
 
-  "managers": {
-    "github-actions": {
-      "enabled": false
-    }
-  },
-
   "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "enabled": false
+    },
     {
       "description": "Auto-merge devDependency patch updates after CI passes",
       "matchUpdateTypes": ["patch"],
