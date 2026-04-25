@@ -1,0 +1,61 @@
+# =============================================================================
+# CodeQL Security Analysis — work-experience-site
+# =============================================================================
+# Semantic code analysis using GitHub's CodeQL engine. Complements CI linting
+# with data-flow and taint-tracking analysis — finds injection paths, prototype
+# pollution, ReDoS, and path traversal that pattern-matching cannot detect.
+#
+# Results appear in: GitHub repo → Security → Code scanning alerts
+# Docs: https://docs.github.com/en/code-security/code-scanning
+# =============================================================================
+
+name: CodeQL Analysis
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly on Saturday at 03:00 SGT (Friday 19:00 UTC) — off-peak
+    - cron: "0 19 * * 5"
+  workflow_dispatch:
+
+# Least-privilege permissions
+permissions: read-all
+
+jobs:
+  analyze:
+    name: Analyze (javascript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          # security-extended adds OWASP Top 10 + crypto misuse + ReDoS
+          queries: security-extended
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:javascript
