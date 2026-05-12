@@ -1,17 +1,10 @@
-# =============================================================================
-# Work Experience Site — Automated Security Audit
-# =============================================================================
-# Runs npm audit fix weekly and creates a PR if safe fixes are available.
-# This handles patch-level transitive dependency vulnerabilities automatically.
-#
-# Schedule: Monday 07:00 SGT (Sunday 23:00 UTC)
-# =============================================================================
-
-name: Security Audit
+---
+# Work Experience Site — Scheduled Security Audit
+name: Scheduled Security Audit
 
 "on":
   schedule:
-    - cron: "0 23 * * 0" # Monday 07:00 SGT (Sunday 23:00 UTC)
+    - cron: 0 23 * * 0  # Every Monday 07:00 SGT (Sunday 23:00 UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -19,8 +12,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  security-audit:
-    name: npm audit fix
+  audit-and-fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,16 +25,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run npm audit fix
+      - name: Run npm audit
         id: audit
         run: |
-          if npm audit --audit-level=high --json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); exit(0 if d.get('metadata',{}).get('vulnerabilities',{}).get('high',0) + d.get('metadata',{}).get('vulnerabilities',{}).get('critical',0) == 0 else 1)" 2>/dev/null; then
+          if npm audit 2>&1 | tail -1 | grep -q 'found 0 vulnerabilities'; then
             echo "clean=true" >> "$GITHUB_OUTPUT"
-            echo "No high/critical vulnerabilities found"
+            echo "No vulnerabilities found"
           else
-            npm audit fix || true
             echo "clean=false" >> "$GITHUB_OUTPUT"
+            echo "Vulnerabilities detected"
           fi
+
+      - name: Apply safe fixes
+        if: steps.audit.outputs.clean == 'false'
+        run: npm audit fix || true
 
       - name: Check for changes
         if: steps.audit.outputs.clean == 'false'
@@ -50,38 +46,28 @@ jobs:
         run: |
           if git diff --quiet package-lock.json package.json; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
-            echo "No fixable changes"
           else
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
-            echo "Changes detected:"
             git diff --stat
           fi
 
+      - name: Verify build
+        if: steps.changes.outputs.has_changes == 'true'
+        run: npm run build
+
       - name: Create PR
         if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH="security/audit-fix-$(date +%Y%m%d)"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add -A
-          git commit -m "fix(deps): automated npm audit fix $(date +%Y-%m-%d)
-
-Applied via scheduled security audit workflow.
-Only safe, non-breaking fixes (no --force)."
+          git commit -m "fix(deps): automated npm audit fix $(date +%Y-%m-%d)"
           git push origin "$BRANCH"
-
           gh pr create \
-            --title "fix(deps): automated security audit fix — $(date +%Y-%m-%d)" \
-            --body "## Automated Security Audit
-
-This PR was created by the scheduled security audit workflow.
-
-**What changed:** \`npm audit fix\` applied safe (non-breaking) fixes to resolve known vulnerabilities.
-
-**Safety:** Only patch-level transitive dependency updates. No \`--force\` flag used.
-
-**Action required:** Review and merge if CI passes." \
+            --title "fix(deps): automated security audit fix -- $(date +%Y-%m-%d)" \
+            --body "Automated weekly npm audit fix. Only safe patch-level fixes applied (no --force). Review and merge if CI passes." \
             --label "dependencies,security"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
