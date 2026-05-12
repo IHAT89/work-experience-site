@@ -66,8 +66,12 @@ jobs:
           git checkout -b "$BRANCH"
           git add -A
           git commit -m "fix(deps): automated npm audit fix $(date +%Y-%m-%d)"
-          git push origin "$BRANCH"
-          gh pr create \
-            --title "fix(deps): automated security audit fix -- $(date +%Y-%m-%d)" \
-            --body "Automated weekly npm audit fix. Only safe patch-level fixes applied (no --force). Review and merge if CI passes." \
-            --label "dependencies,security"
+          git push --force origin "$BRANCH"
+          if gh pr view "$BRANCH" > /dev/null 2>&1; then
+            echo "PR already exists for $BRANCH — skipping create"
+          else
+            gh pr create \
+              --title "fix(deps): automated security audit fix -- $(date +%Y-%m-%d)" \
+              --body "Automated weekly npm audit fix. Only safe patch-level fixes applied (no --force). Review and merge if CI passes." \
+              --label "dependencies,security"
+          fi
