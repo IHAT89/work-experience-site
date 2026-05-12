@@ -1,0 +1,82 @@
+# =============================================================================
+# Work Experience Site — Lighthouse Performance Audit
+# =============================================================================
+# Runs automatically every Sunday midnight SGT (weekly) against the homepage.
+# Can also be triggered manually to audit a specific URL path.
+#
+# Schedule: Saturday 16:00 UTC = Sunday 00:00 SGT
+# Manual:   gh workflow run lighthouse.yml -f path=/
+# =============================================================================
+
+name: Lighthouse Audit
+
+"on":
+  schedule:
+    - cron: "0 16 * * 6" # Sunday 00:00 SGT (Saturday 16:00 UTC)
+  workflow_dispatch: # checkov:skip=CKV_GHA_7:Manual audit workflow — hardcoded choice list, no injection risk
+    inputs:
+      path:
+        description: URL path to audit (e.g. / or /about)
+        required: true
+        default: /
+        type: choice
+        options:
+          - /
+          - /about
+          - /contact
+
+permissions: read-all
+
+jobs:
+  lighthouse:
+    name: Lighthouse — ${{ github.event.inputs.path || '/' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Start production server
+        run: node .next/standalone/server.js &
+        env:
+          PORT: 3000
+          NODE_ENV: production
+
+      - name: Wait for server
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 >/dev/null 2>&1; then
+              echo "Server ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::Server did not start within 30s"
+          exit 1
+
+      - name: Lighthouse audit
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000${{ github.event.inputs.path || '/' }}
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report-${{ github.run_number }}
+          path: .lighthouseci/
+          retention-days: 30
