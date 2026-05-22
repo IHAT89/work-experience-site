@@ -24,7 +24,7 @@
     "nodemailer": "^8.0.7",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
-    "react-cookie-consent": "^9.0.0",
+    "react-cookie-consent": "^10.0.1",
     "react-dom": "^18.3.1",
     "react-google-recaptcha-v3": "^1.11.0"
   },
@@ -41,7 +41,7 @@
     "jest": "^30.0.0",
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.0.0",
-    "postcss": "^8.5.14",
+    "postcss": "^8.5.15",
     "tailwindcss": "^4.1.8"
   },
   "overrides": {
