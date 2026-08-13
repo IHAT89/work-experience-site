@@ -1,0 +1,24 @@
+name: Weekly Self Audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 22 * * 0
+
+permissions:
+  contents: read
+
+jobs:
+  weekly-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run weekly governance self-audit
+        run: node .github/scripts/weekly-self-audit.js

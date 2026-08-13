@@ -1,0 +1,87 @@
+name: Governance PR Enforcement
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate governance checklist and scorecard
+        id: validate
+        continue-on-error: true
+        env:
+          SCORECARD_DEFAULT_THRESHOLD: "27"
+          SCORECARD_MAX: "40"
+          GOVERNANCE_REPORT_PATH: governance-report.json
+        run: node .github/scripts/validate-governance-pr.js
+
+      - name: Comment governance failures on PR
+        if: always() && github.event_name == 'pull_request' && steps.validate.outcome == 'failure'
+        uses: actions/github-script@v7
+        env:
+          GOVERNANCE_REPORT_PATH: governance-report.json
+        with:
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- governance-enforcement-report -->';
+            const reportPath = process.env.GOVERNANCE_REPORT_PATH;
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+
+            const failures = report.failures.map((f) => `- ${f}`).join('\n');
+            const missingFields = report.missingRgogcFields.length
+              ? report.missingRgogcFields.map((f) => `- ${f}`).join('\n')
+              : '- None';
+
+            const body = `${marker}
+            ## Governance Check Failed
+
+            The governance validator found required fixes before merge.
+
+            - Repository: ${report.repository}
+            - Required score threshold: ${report.threshold}/${report.scorecardMax}
+            - Reported score: ${report.score ?? 'missing'}/${report.scoreMaxFound ?? report.scorecardMax}
+
+            ### Missing RGOGC fields
+            ${missingFields}
+
+            ### Failures
+            ${failures}
+
+            ### Copy-ready fix snippet
+            \`\`\`md
+            ${report.fixSnippet}
+            \`\`\`
+            `;
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const existing = comments.find((c) => c.user.type === 'Bot' && c.body && c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+
+      - name: Fail if governance validation failed
+        if: steps.validate.outcome == 'failure'
+        run: |
+          echo "Governance validation failed. See comment on PR for fix guidance."
+          exit 1
