@@ -481,6 +481,20 @@ reCAPTCHA site key not found
 
 ---
 
+## Production Incident & Resolution — 2026-08-14
+
+Contact form on `www.workexperience.sg` returned **"Failed to send message. Please try again later."** for every submission. Root cause was **two stacked, independent faults**:
+
+1. **reCAPTCHA key mismatch (Vercel).** Production env pointed at the wrong reCAPTCHA credentials while the code runs **v3** (`react-google-recaptcha-v3`, score-based). `/api/verify-recaptcha` returned `success:false`, so the form threw before EmailJS ran.
+   - **Fix:** Set both `RECAPTCHA_SECRET_KEY` and `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` from the **same v3 site** ("Work Experience Site", domains include `workexperience.sg`, `www.workexperience.sg`, `work-experience-site.vercel.app`) in Vercel → All Environments → **redeploy** (env changes require a fresh build). The account also has a legacy **v2 Checkbox** site — do not use its keys.
+
+2. **EmailJS Outlook OAuth stale.** After reCAPTCHA passed, EmailJS service `service_qu4xsmo` (Outlook, `iantownrow@transinex.com.sg`) failed 3× — the Microsoft OAuth token had lapsed while still showing "Connected".
+   - **Fix:** EmailJS dashboard → Email Services → Outlook → **Disconnect → reconnect** (re-accept permissions) → send test email. No code or Service ID change.
+
+**Verified:** live form returns "Thank you! Your message has been sent." Debugging order that works: browser Console error → Network `/api/verify-recaptcha` response (`success`/`score`) → EmailJS event log. Fix was **config-only**; no source changes.
+
+---
+
 ## Comparison
 
 | Feature         | Cloudflare Turnstile  | Google reCAPTCHA v3 |
