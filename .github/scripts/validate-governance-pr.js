@@ -20,6 +20,20 @@ if (labels.includes("governance-override")) {
   process.exit(0);
 }
 
+const author = (pr.user?.login || "").toLowerCase();
+const authorType = pr.user?.type || "";
+const botAuthors = new Set([
+  "dependabot[bot]",
+  "dependabot",
+  "renovate[bot]",
+  "renovate",
+  "github-actions[bot]",
+]);
+if (authorType === "Bot" || botAuthors.has(author)) {
+  console.log(`Automated dependency PR by ${author || "bot"}; skipping governance checks.`);
+  process.exit(0);
+}
+
 const repoFull = process.env.GITHUB_REPOSITORY || "";
 const repoName = repoFull.includes("/") ? repoFull.split("/")[1] : (event.repository?.name || "");
 
