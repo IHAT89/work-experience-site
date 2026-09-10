@@ -38,6 +38,10 @@ header, footer {
 
 header strong {
   color: #007aff;
+  font-size: clamp(1.8rem, 2.8vw, 3rem);
+  line-height: 1.2;
+  font-weight: 700;
+  display: inline-block;
 }
 
 footer {
